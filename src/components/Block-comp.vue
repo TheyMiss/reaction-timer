@@ -14,9 +14,10 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const showBlock = ref(false);
     const reactionTime = ref(0);
+    let timer: number;
 
     onMounted(() =>
       setTimeout(() => {
@@ -25,19 +26,16 @@ export default defineComponent({
       }, props.delay)
     );
 
-    function startTimer() {
-      const timer = setInterval(() => {
+    const startTimer = () => {
+      timer = setInterval(() => {
         reactionTime.value += 10;
       }, 10);
+    };
 
-      return timer;
-    }
-
-    const timer = startTimer();
-
-    function stopTimer() {
+    const stopTimer = () => {
       clearInterval(timer);
-    }
+      emit("end", reactionTime.value);
+    };
 
     return {
       showBlock,

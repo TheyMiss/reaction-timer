@@ -1,26 +1,37 @@
 <template>
   <h1>Reaction Timer</h1>
-  <button @click="startGame()" :disabled="isPlaying">Start Game</button>
-  <BlockComp v-if="isPlaying" :delay="delay" />
+  <button @click="startGame" :disabled="isPlaying">Start Game</button>
+  <BlockComp v-if="isPlaying" :delay="delay" @end="endGame" />
+  <ResultsComp v-if="showResults" :score="score" />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import BlockComp from "./components/Block-comp.vue";
+import ResultsComp from "./components/Results-comp.vue";
 
 export default defineComponent({
   name: "App",
-  components: { BlockComp },
+  components: { BlockComp, ResultsComp },
   setup() {
     const isPlaying = ref(false);
     const delay = ref(0);
+    const score = ref(0);
+    const showResults = ref(false);
 
     const startGame = () => {
       isPlaying.value = true;
       delay.value = 2000 + Math.random() * 5000;
+      showResults.value = false;
     };
 
-    return { isPlaying, delay, startGame };
+    const endGame = (reactionTime: number) => {
+      score.value = reactionTime;
+      isPlaying.value = false;
+      showResults.value = true;
+    };
+
+    return { isPlaying, delay, startGame, endGame, score, showResults };
   },
 });
 </script>
