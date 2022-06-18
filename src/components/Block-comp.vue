@@ -1,16 +1,48 @@
 <template>
-  <div class="block">Block</div>
+  <div v-if="showBlock" class="block" @click="stopTimer()">Block</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent({
   props: {
     delay: {
-      validator: (props) => typeof props === "string" || props === null,
-      required: false,
+      type: Number,
+      required: true,
+      nullable: true,
     },
+  },
+
+  setup(props) {
+    const showBlock = ref(false);
+    const reactionTime = ref(0);
+
+    onMounted(() =>
+      setTimeout(() => {
+        showBlock.value = true;
+        startTimer();
+      }, props.delay)
+    );
+
+    function startTimer() {
+      const timer = setInterval(() => {
+        reactionTime.value += 10;
+      }, 10);
+
+      return timer;
+    }
+
+    const timer = startTimer();
+
+    function stopTimer() {
+      clearInterval(timer);
+    }
+
+    return {
+      showBlock,
+      stopTimer,
+    };
   },
 });
 </script>

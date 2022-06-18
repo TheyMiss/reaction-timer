@@ -13,7 +13,7 @@ export default defineComponent({
   components: { BlockComp },
   setup() {
     const isPlaying = ref(false);
-    const delay = ref<null | number>(null);
+    const delay = ref(0);
 
     const startGame = () => {
       isPlaying.value = true;
